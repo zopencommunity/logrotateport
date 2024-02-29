@@ -1,0 +1,34 @@
+# Update bump details accordingly. Use bump check to confirm.
+# bump: logrotate-version /LOGROTATE_VERSION="(.*)"/ https://github.com/logrotate/logrotate.git|semver:*
+# LOGROTATE_VERSION="V.R.M" # Specify a stable release
+# export ZOPEN_STABLE_TAG="v${LOGROTATE_VERSION}"
+export ZOPEN_STABLE_URL="https://github.com/logrotate/logrotate.git"
+export ZOPEN_STABLE_DEPS="zoslib make coreutils perl m4 autoconf automake libtool popt gzip"
+export ZOPEN_BOOTSTRAP="./autogen.sh"
+export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_CATEGORIES="devops"
+export ZOPEN_RUNTIME_DEPS="gzip"
+
+export ZOPEN_EXTRA_CONFIGURE_OPTS="--with-compress-command=\"gzip\" --with-uncompress-command=\"gunzip\""
+
+export ZOPEN_COMP="CLANG"
+
+zopen_check_results()
+{
+  dir="$1"
+  pfx="$2"
+  chk="$1/$2_check.log"
+
+  # Echo the following information to gauge build health
+  echo "actualFailures:0"
+  echo "totalTests:1"
+  echo "expectedFailures:0"
+  echo "expectedTotalTests:1"
+}
+
+zopen_get_version()
+{
+  # Modify to echo the version of your tool/library
+  # Rather than hardcoding the version, obtain the version by running the tool/library
+  echo "1.0.0"
+}
