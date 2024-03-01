@@ -12,7 +12,7 @@ By default, logrotate uses configuration files located in /etc/logrotate.d/.
 
 However, you can create a custom file in your home directory to manage specific application logs.
 
-``
+```
 vim ~/myapp_logrotate.conf
 ```
 
