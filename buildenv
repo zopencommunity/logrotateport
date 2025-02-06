@@ -26,6 +26,11 @@ zopen_check_results()
   echo "expectedTotalTests:1"
 }
 
+zopen_post_install() {
+  mkdir -p "$1/bin"
+  mv -f "$1/sbin/logrotate" "$1/bin/logrotate"
+}
+
 zopen_get_version()
 {
   # Modify to echo the version of your tool/library
