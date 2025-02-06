@@ -21,7 +21,7 @@ index 793183e..d1fb270 100644
                      strerror(errno));
              return 1;
 diff --git a/logrotate.c b/logrotate.c
-index 3c2a7b7..d29492f 100644
+index 3c2a7b7..81f8310 100644
 --- a/logrotate.c
 +++ b/logrotate.c
 @@ -225,7 +225,11 @@ static int open_logfile(const char *path, const struct logInfo *log, int write_a
@@ -30,7 +30,7 @@ index 3c2a7b7..d29492f 100644
  
 +#ifndef __MVS__
      fd = open(path, O_NOFOLLOW | O_NOCTTY | O_NONBLOCK | (write_access ? O_RDWR : O_RDONLY));
-+#endif
++#else
 +    fd = open(path, (write_access ? O_RDWR : O_RDONLY));
 +#endif
      if (fd < 0)
