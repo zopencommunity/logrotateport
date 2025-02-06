@@ -1,8 +1,8 @@
 diff --git a/config.c b/config.c
-index 83009ac..66068ec 100644
+index 793183e..d1fb270 100644
 --- a/config.c
 +++ b/config.c
-@@ -427,7 +427,7 @@ static int do_mkdir(const char *path, mode_t mode, uid_t uid, gid_t gid) {
+@@ -491,7 +491,7 @@ static int do_mkdir(const char *path, mode_t mode, uid_t uid, gid_t gid) {
          int fd;
  
          /* newly created directory, set the owner and permissions */
@@ -11,7 +11,7 @@ index 83009ac..66068ec 100644
          if (fd < 0) {
              message(MESS_ERROR, "error opening %s after creation: %s\n",
                      path, strerror(errno));
-@@ -700,7 +700,7 @@ static int readConfigPath(const char *path, struct logInfo *defConfig)
+@@ -770,7 +770,7 @@ static int readConfigPath(const char *path, struct logInfo *defConfig)
          unsigned files_count = 0, i;
          DIR *dirp;
  
@@ -21,19 +21,22 @@ index 83009ac..66068ec 100644
                      strerror(errno));
              return 1;
 diff --git a/logrotate.c b/logrotate.c
-index 7fff811..4cee89a 100644
+index 3c2a7b7..d29492f 100644
 --- a/logrotate.c
 +++ b/logrotate.c
-@@ -224,7 +224,7 @@ static int open_logfile(const char *path, const struct logInfo *log, int write_a
-     int fd;
+@@ -225,7 +225,11 @@ static int open_logfile(const char *path, const struct logInfo *log, int write_a
+     int fd, flags;
      struct stat sb;
  
--    fd = open(path, O_NOFOLLOW | (write_access ? O_RDWR : O_RDONLY));
++#ifndef __MVS__
+     fd = open(path, O_NOFOLLOW | O_NOCTTY | O_NONBLOCK | (write_access ? O_RDWR : O_RDONLY));
++#endif
 +    fd = open(path, (write_access ? O_RDWR : O_RDONLY));
++#endif
      if (fd < 0)
          return fd;
  
-@@ -561,7 +561,7 @@ static int createOutputFile(const char *fileName, int flags, const struct stat *
+@@ -613,7 +617,7 @@ static int createOutputFile(const char *fileName, int flags, const struct stat *
          size_t fileName_size, buf_size;
          char *backupName, *ptr;
  
@@ -42,7 +45,7 @@ index 7fff811..4cee89a 100644
                  (S_IRUSR | S_IWUSR) & sb->st_mode);
  
          if ((fd >= 0) || (errno != EEXIST))
-@@ -1419,7 +1419,7 @@ static int findNeedRotating(const struct logInfo *log, unsigned logNum, int forc
+@@ -1465,7 +1469,7 @@ static int findNeedRotating(const struct logInfo *log, unsigned logNum, int forc
      state->sb = sb;
      state->isUsed = 1;
  
@@ -51,7 +54,7 @@ index 7fff811..4cee89a 100644
          message(MESS_DEBUG, "  log %s is symbolic link. Rotation of symbolic"
                  " links is not allowed to avoid security issues -- skipping.\n",
                  log->files[logNum]);
-@@ -3050,7 +3050,7 @@ static int lockState(const char *stateFilename, int skip_state_lock, int wait_fo
+@@ -3163,7 +3167,7 @@ static int lockState(const char *stateFilename, int skip_state_lock, int wait_fo
          return 0;
      }
  

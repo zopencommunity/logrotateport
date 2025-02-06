@@ -1,7 +1,7 @@
 # Update bump details accordingly. Use bump check to confirm.
 # bump: logrotate-version /LOGROTATE_VERSION="(.*)"/ https://github.com/logrotate/logrotate.git|semver:*
-# LOGROTATE_VERSION="V.R.M" # Specify a stable release
-# export ZOPEN_STABLE_TAG="v${LOGROTATE_VERSION}"
+LOGROTATE_VERSION="3.22.0" # Specify a stable release
+export ZOPEN_STABLE_TAG="v${LOGROTATE_VERSION}"
 export ZOPEN_STABLE_URL="https://github.com/logrotate/logrotate.git"
 export ZOPEN_STABLE_DEPS="zoslib make coreutils perl m4 autoconf automake libtool popt gzip"
 export ZOPEN_BOOTSTRAP="./autogen.sh"
@@ -24,6 +24,11 @@ zopen_check_results()
   echo "totalTests:1"
   echo "expectedFailures:0"
   echo "expectedTotalTests:1"
+}
+
+zopen_post_install() {
+  mkdir -p "$1/bin"
+  mv -f "$1/sbin/logrotate" "$1/bin/logrotate"
 }
 
 zopen_get_version()
